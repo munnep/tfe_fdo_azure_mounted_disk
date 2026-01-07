@@ -6,10 +6,21 @@ variable "vnet_cidr" {
   description = "which private subnet do you want to use for the VPC. Subnet mask of /16"
 }
 
+variable "tfe_os" {
+  description = "which OS to use ubuntu or redhat"
+
+  validation {
+    condition     = contains(["ubuntu", "redhat"], lower(var.tfe_os))
+    error_message = "tfe_os must be either 'ubuntu' or 'redhat'."
+  }
+}
+
+variable "azure_subscription_id" {
+  description = "azure subscription id to use"
+}
 
 variable "public_key" {
-  type        = string
-  description = "public to use on the instances"
+  description = "public key to use on the instances"
 }
 
 variable "tfe_password" {
