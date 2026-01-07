@@ -51,11 +51,11 @@ cd tfe_fdo_azure_mounted_disk
 tag_prefix            = "tfe22"                       # TAG prefix for names to easily find your AWS resources
 dns_hostname          = "tfe22"                       # DNS hostname for the TFE
 dns_zonename          = "aws.munnep.com"              # DNS zone name to be used
-tfe_release           = "v202312-1"                   # Version number for the release to install. This must have a value
+tfe_release           = "1.1.2"                   # Version number for the release to install. This must have a value
 tfe_password          = "Password#1"                  # TFE password for the dashboard and encryption of the data
 public_key            = "ssh-rsa AAAAB3NzaN"          # The public key for you to connect to the server over SSH
 certificate_email     = "patrick.munne@hashicorp.com" # Your email address used by TLS certificate 
-tfe_license           = "02MV4UU43BK5HGYYTOJZ"        # license file being used
+tfe_license           = "<license>"        # license file being used
 # AWS
 region                = "eu-north-1"                   # AWS region creating the DNS records
 # Azure
