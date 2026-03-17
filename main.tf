@@ -15,6 +15,13 @@ provider "azurerm" {
   subscription_id = var.azure_subscription_id
 }
 
+provider "azurerm" {
+  alias                   = "image_factory"
+  subscription_id          = var.azure_images_subscription_id
+  features {}
+}
+
+
 provider "aws" {
   region = var.region
 }
@@ -24,28 +31,21 @@ provider "acme" {
   server_url = "https://acme-v02.api.letsencrypt.org/directory"
 }
 
-locals {
-  tfe_os_normalized = lower(var.tfe_os)
+data "azurerm_shared_image_version" "ubuntu" {
+  provider            = azurerm.image_factory
+  name                = "latest"
+  image_name          = "hc-base-ubuntu-2404-amd64"
+  gallery_name        = "hcbaseGallery"
+  resource_group_name = "hc-base-rg-gallery"
+}
 
-  # Azure Marketplace image references
-  # Ubuntu: pinned version as before
-  # RedHat: use 'latest' so it stays current
-  image_references = {
-    ubuntu = {
-      publisher = "Canonical"
-      offer     = "0001-com-ubuntu-server-jammy"
-      sku       = "22_04-lts-gen2"
-      version   = "22.04.202312060"
-    }
-    redhat = {
-      publisher = "RedHat"
-      offer     = "RHEL"
-      sku       = "9-lvm-gen2"
-      version   = "latest"
-    }
-  }
 
-  selected_image = local.image_references[local.tfe_os_normalized]
+data "azurerm_shared_image_version" "redhat" {
+  provider            = azurerm.image_factory
+  name                = "latest"
+  image_name          = "hc-base-rhel-9-x86_64"
+  gallery_name        = "hcbaseGallery"
+  resource_group_name = "hc-base-rg-gallery"
 }
 
 resource "azurerm_resource_group" "tfe" {
@@ -158,13 +158,7 @@ resource "azurerm_linux_virtual_machine" "client" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
-  source_image_reference {
-    publisher = local.selected_image.publisher
-    offer     = local.selected_image.offer
-    sku       = local.selected_image.sku
-    version   = local.selected_image.version
-  }
+  source_image_id = var.tfe_os == "ubuntu" ? data.azurerm_shared_image_version.ubuntu.id : data.azurerm_shared_image_version.redhat.id
 }
 
 resource "azurerm_public_ip" "tfe_instance" {
@@ -223,13 +217,14 @@ resource "azurerm_linux_virtual_machine" "tfe" {
     storage_account_type = "StandardSSD_LRS"
   }
 
-  source_image_reference {
-    publisher = local.selected_image.publisher
-    offer     = local.selected_image.offer
-    sku       = local.selected_image.sku
-    version   = local.selected_image.version
-  }
+  # source_image_reference {
+  #   publisher = local.selected_image.publisher
+  #   offer     = local.selected_image.offer
+  #   sku       = local.selected_image.sku
+  #   version   = local.selected_image.version
+  # }
 
+  source_image_id = var.tfe_os == "ubuntu" ? data.azurerm_shared_image_version.ubuntu.id : data.azurerm_shared_image_version.redhat.id  
 }
 
 

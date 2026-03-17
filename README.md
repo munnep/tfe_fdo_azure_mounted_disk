@@ -61,6 +61,7 @@ region                = "eu-north-1"                   # AWS region creating the
 # Azure
 vnet_cidr             = "10.214.0.0/16"                # Network to be used
 azure_subscription_id = "00000000-0000-0000-0000-000000000000" # Azure subscription ID to be used
+azure_images_subscription_id ="00000000-0000-0000-0000-000000000000" # Azure subscription ID where the images are stored to be used by IBM
 tfe_os                = "ubuntu"                       # OS for the TFE server (ubuntu = Docker, redhat = Podman)
 ```
 - Terraform initialize
