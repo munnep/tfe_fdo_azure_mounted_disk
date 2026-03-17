@@ -19,6 +19,10 @@ variable "azure_subscription_id" {
   description = "azure subscription id to use"
 }
 
+variable "azure_images_subscription_id" {
+  description = "azure subscription id where the images are located that has to be used by IBM"
+}
+
 variable "public_key" {
   description = "public key to use on the instances"
 }

@@ -17,7 +17,7 @@ provider "azurerm" {
 
 provider "azurerm" {
   alias                   = "image_factory"
-  subscription_id          = "40ff4694-2b35-4f20-8c72-99c2903b158a" # hashicorp03-image-factory-prod
+  subscription_id          = var.azure_images_subscription_id
   features {}
 }
 
